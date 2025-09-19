@@ -10,7 +10,9 @@ const {
   userValidationSchema,
 } = require("../model/userModel/user_model");
 const { sendEmail } = require("../email/email_services");
-const generateTokenModel = require("../model/tokenModel/generate_token_model");
+const {
+  generateTokenModel,
+} = require("../model/tokenModel/generate_token_model");
 const jwt = require("jsonwebtoken");
 
 const userReg = async (req, res) => {
@@ -49,19 +51,22 @@ const userReg = async (req, res) => {
       role: value.role,
     });
 
-    const name = `${firstname} ${lastname}`;
+    const name = `${newUser.firstname} ${newUser.lastname}`;
     const token = generateAccessToken(newUser);
 
     //hash the token generated
-    const hashed = crypto.createHash(sha256).update(token).digest("hex");
+    const hashed = crypto.createHash("sha256").update(token).digest("hex");
 
     //register the token in database to last 7 days
-    await generateTokenModel.create({
-      tokenId: newUser.id,
+    const tokenUpload = await generateTokenModel.create({
+      tokenId: newUser._id,
       hash: hashed,
     });
 
-    const verifyURL = `https://exam-project-frontend.vercel.app/verify-user-account?token=${token}`;
+    if (!tokenUpload)
+      return res.status(400).json({ message: "Token did not register" });
+
+    const verifyURL = `https://grace-route-real-estate-company.onrender.com/verify-user-account?token=${token}`;
 
     const sentMail = await sendEmail({
       to: value.email,
@@ -96,7 +101,7 @@ const userReg = async (req, res) => {
     });
   } catch (error) {
     res
-      .status(403)
+      .status(500)
       .json({ message: "failed to create account try again later" });
   }
 };

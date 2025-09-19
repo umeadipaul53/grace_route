@@ -13,4 +13,4 @@ const generateTokenSchema = new mongoose.Schema({
 
 const generateTokenModel = mongoose.model("token", generateTokenSchema);
 
-module.exports = generateTokenModel;
+module.exports = { generateTokenModel };
