@@ -1,19 +1,16 @@
 const sanitize = require("mongo-sanitize");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
-const {
-  generateAccessToken,
-  generateRefreshToken,
-} = require("../middleware/tokens");
+const AppError = require("../../utils/AppError");
+const { generateAccessToken } = require("../../middleware/tokens");
 const {
   userModel,
   userValidationSchema,
-} = require("../model/userModel/user_model");
-const { sendEmail } = require("../email/email_services");
+} = require("../../model/userModel/user_model");
+const { sendEmail } = require("../../email/email_services");
 const {
   generateTokenModel,
-} = require("../model/tokenModel/generate_token_model");
-const jwt = require("jsonwebtoken");
+} = require("../../model/tokenModel/generate_token_model");
 
 const userReg = async (req, res) => {
   try {
@@ -28,16 +25,17 @@ const userReg = async (req, res) => {
 
     const { error, value } = userValidationSchema.validate(sanitizedData);
 
-    if (error)
-      return res.status(400).json({ message: error.details[0].message });
+    if (error) return next(new AppError(error.details[0].message, 400));
 
     const existingUser = await userModel.findOne({ email: value.email });
 
     if (existingUser)
-      return res.status(400).json({
-        message:
+      return next(
+        new AppError(
           "E-mail address you entered is already used by another user. Please enter a different E-mail address.",
-      });
+          404
+        )
+      );
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(value.password, salt);
@@ -63,8 +61,7 @@ const userReg = async (req, res) => {
       hash: hashed,
     });
 
-    if (!tokenUpload)
-      return res.status(400).json({ message: "Token did not register" });
+    if (!tokenUpload) return next(new AppError("Token did not register", 400));
 
     const verifyURL = `https://grace-route-real-estate-company.onrender.com/verify-user-account?token=${token}`;
 
@@ -81,9 +78,7 @@ const userReg = async (req, res) => {
     console.log("Email sent?", sentMail);
 
     if (!sentMail)
-      return res
-        .status(400)
-        .json({ message: "failed to send verification Email" });
+      return next(new AppError("failed to send verification Email", 400));
 
     return res.status(200).json({
       message:
@@ -99,10 +94,8 @@ const userReg = async (req, res) => {
         token: token,
       },
     });
-  } catch (error) {
-    res
-      .status(500)
-      .json({ message: "failed to create account try again later" });
+  } catch (err) {
+    next(err);
   }
 };
 
