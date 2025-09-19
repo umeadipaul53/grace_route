@@ -5,6 +5,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
 app.use(express.json());
+app.use(express.static("public"));
 app.use(cookieParser());
 
 const port = process.env.PORT || 3300;
