@@ -15,6 +15,21 @@ function generateAccessToken(user, expiresIn = "5m") {
   );
 }
 
+function generateRegistrationAccessToken(user, expiresIn = "30m") {
+  return jwt.sign(
+    {
+      id: user._id.toString(),
+      email: user.email,
+      role: user.role,
+    },
+    process.env.JWT_SECRET,
+    {
+      algorithm: "HS256",
+      expiresIn,
+    }
+  );
+}
+
 function generateRefreshToken(user, tokenId, expiresIn = "7d") {
   return jwt.sign(
     {
@@ -30,4 +45,8 @@ function generateRefreshToken(user, tokenId, expiresIn = "7d") {
   );
 }
 
-module.exports = { generateAccessToken, generateRefreshToken };
+module.exports = {
+  generateAccessToken,
+  generateRefreshToken,
+  generateRegistrationAccessToken,
+};

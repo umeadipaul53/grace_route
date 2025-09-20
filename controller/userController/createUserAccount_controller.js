@@ -2,7 +2,7 @@ const sanitize = require("mongo-sanitize");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const AppError = require("../../utils/AppError");
-const { generateAccessToken } = require("../../middleware/tokens");
+const { generateRegistrationAccessToken } = require("../../middleware/tokens");
 const {
   userModel,
   userValidationSchema,
@@ -12,7 +12,7 @@ const {
   generateTokenModel,
 } = require("../../model/tokenModel/generate_token_model");
 
-const userReg = async (req, res) => {
+const userReg = async (req, res, next) => {
   try {
     const sanitizedData = {
       email: sanitize(req.body.email),
@@ -50,7 +50,7 @@ const userReg = async (req, res) => {
     });
 
     const name = `${newUser.firstname} ${newUser.lastname}`;
-    const token = generateAccessToken(newUser);
+    const token = generateRegistrationAccessToken(newUser);
 
     //hash the token generated
     const hashed = crypto.createHash("sha256").update(token).digest("hex");

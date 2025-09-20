@@ -65,7 +65,10 @@ const userValidationSchema = Joi.object({
   role: Joi.string().valid("user").default("user"),
 });
 
+const emailValidationSchema = Joi.string().email().required();
+
 module.exports = {
   userModel,
   userValidationSchema,
+  emailValidationSchema,
 };
