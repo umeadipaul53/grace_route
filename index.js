@@ -26,6 +26,7 @@ const frontendURL = isProduction
   ? "https://gracerouteltd.com"
   : "http://localhost:5173";
 
+const authRoutes = require("./routes/auth_routes");
 const userRoutes = require("./routes/user_routes");
 const adminRoutes = require("./routes/admin_routes");
 
@@ -38,6 +39,7 @@ app.get("/", (req, res) => {
     .json({ message: "server up and running", data: isProduction });
 });
 
+app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/admin", adminRoutes);
 

@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const AppError = require("../../utils/AppError");
 const {
-  generateTokenModel,
+  registerTokenModel,
 } = require("../../model/tokenModel/generate_token_model");
 const { generateAccessToken } = require("../../middleware/tokens");
 
@@ -17,7 +17,7 @@ const userAccountVerification = async (req, res, next) => {
     const hashed = crypto.createHash("sha256").update(useToken).digest("hex");
 
     //check if hashed token matches token in DB
-    const checkRecord = await generateTokenModel.findOne({ hash: hashed });
+    const checkRecord = await registerTokenModel.findOne({ hash: hashed });
 
     if (!checkRecord) return next(new AppError("Invalid token", 400));
 
@@ -48,7 +48,7 @@ const userAccountVerification = async (req, res, next) => {
     );
 
     //delete the token once its verified and user account has been verified
-    await generateTokenModel.deleteMany({
+    await registerTokenModel.deleteMany({
       tokenId: decodeToken.id,
     });
 

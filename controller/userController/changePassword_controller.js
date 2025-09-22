@@ -4,7 +4,7 @@ const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 const AppError = require("../../utils/AppError");
 const {
-  generateTokenModel,
+  registerTokenModel,
 } = require("../../model/tokenModel/generate_token_model");
 
 const verifyChangePasswordToken = async (req, res, next) => {
@@ -57,7 +57,7 @@ const handleChangePassword = async (req, res, next) => {
     user.password = hashedPass;
     await user.save();
 
-    await generateTokenModel.deleteMany({
+    await registerTokenModel.deleteMany({
       tokenId: verifyToken.id,
     });
 

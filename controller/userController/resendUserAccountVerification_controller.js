@@ -1,10 +1,10 @@
 const crypto = require("crypto");
 const AppError = require("../../utils/AppError");
-const { generateRegistrationAccessToken } = require("../../middleware/tokens");
+const { generateAccessToken } = require("../../middleware/tokens");
 const userModel = require("../../model/userModel/user_model");
 const { sendEmail } = require("../../email/email_services");
 const {
-  generateTokenModel,
+  registerTokenModel,
 } = require("../../model/tokenModel/generate_token_model");
 
 const resendUserRegistrationToken = async (req, res, next) => {
@@ -23,11 +23,11 @@ const resendUserRegistrationToken = async (req, res, next) => {
         )
       );
 
-    const token = generateRegistrationAccessToken(user);
+    const token = generateAccessToken(user);
 
     const hashed = crypto.createHash("sha256").update(token).digest("hex");
 
-    await generateTokenModel.create({
+    await registerTokenModel.create({
       tokenId: user._id,
       hash: hashed,
     });

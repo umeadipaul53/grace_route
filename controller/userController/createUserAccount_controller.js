@@ -1,11 +1,11 @@
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const AppError = require("../../utils/AppError");
-const { generateRegistrationAccessToken } = require("../../middleware/tokens");
+const { generateAccessToken } = require("../../middleware/tokens");
 const userModel = require("../../model/userModel/user_model");
 const { sendEmail } = require("../../email/email_services");
 const {
-  generateTokenModel,
+  registerTokenModel,
 } = require("../../model/tokenModel/generate_token_model");
 
 const userReg = async (req, res, next) => {
@@ -36,13 +36,13 @@ const userReg = async (req, res, next) => {
     });
 
     const name = `${newUser.firstname} ${newUser.lastname}`;
-    const token = generateRegistrationAccessToken(newUser);
+    const token = generateAccessToken(newUser);
 
     //hash the token generated
     const hashed = crypto.createHash("sha256").update(token).digest("hex");
 
     //register the token in database to last 7 days
-    const tokenUpload = await generateTokenModel.create({
+    const tokenUpload = await registerTokenModel.create({
       tokenId: newUser._id,
       hash: hashed,
     });

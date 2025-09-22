@@ -1,19 +1,10 @@
 const Joi = require("joi");
+const passwordRule = require("./passwordRule");
+const { emailRule } = require("./emailValidator");
 
 const userValidationSchema = Joi.object({
-  email: Joi.string().email().required(),
-  password: Joi.string()
-    .min(6)
-    .pattern(
-      /^(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).+$/
-    )
-    .required()
-    .messages({
-      "string.pattern.base":
-        "Password must contain at least one uppercase letter, one symbol, letters, and numbers",
-      "string.empty": "New password is required",
-      "string.min": "New password must be at least 6 characters long",
-    }),
+  email: emailRule,
+  password: passwordRule.required(),
   firstname: Joi.string()
     .pattern(/^[a-zA-Z ]+$/)
     .required()

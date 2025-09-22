@@ -3,7 +3,7 @@ const AppError = require("../../utils/AppError");
 const userModel = require("../../model/userModel/user_model");
 const { generateAccessToken } = require("../../middleware/tokens");
 const {
-  generateTokenModel,
+  registerTokenModel,
 } = require("../../model/tokenModel/generate_token_model");
 const { sendEmail } = require("../../email/email_services");
 
@@ -18,7 +18,7 @@ const forgotPassword = async (req, res, next) => {
     const token = generateAccessToken(user);
     const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
 
-    await generateTokenModel.create({
+    await registerTokenModel.create({
       tokenId: user._id,
       hash: hashedToken,
     });
