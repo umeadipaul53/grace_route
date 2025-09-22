@@ -21,14 +21,20 @@
   },
   "homepage": "https://github.com/umeadipaul53/grace_route#readme",
   "dependencies": {
+    "@fastify/csrf-protection": "^7.1.0",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
+    "csrf-csrf": "^4.0.3",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^8.1.0",
+    "express-validator": "^7.2.1",
     "fs": "^0.0.1-security",
     "handlebars": "^4.7.8",
     "helmet": "^8.1.0",
+    "hpp": "^0.2.3",
     "joi": "^18.0.1",
     "jsonwebtoken": "^9.0.2",
     "mjml": "^4.16.1",
@@ -36,7 +42,8 @@
     "mongoose": "^8.18.1",
     "morgan": "^1.10.1",
     "nodemailer": "^7.0.6",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "sanitize-html": "^2.17.0"
   },
   "devDependencies": {
     "eslint": "^9.35.0",

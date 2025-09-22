@@ -47,9 +47,9 @@ async function sendEmail({ to, subject, templateName, variables }) {
       html,
     };
 
-    await transporter.sendMail(mailOptions);
+    const emailInfo = await transporter.sendMail(mailOptions);
 
-    return true; // ✅ Add this line to return success
+    return emailInfo; // ✅ Add this line to return success
   } catch (error) {
     console.error("Failed to send email:", error.message);
     return false; // ✅ Add this to indicate failure

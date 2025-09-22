@@ -1,8 +1,6 @@
-const { userModel } = require("../../model/userModel/user_model");
+const userModel = require("../../model/userModel/user_model");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
-const validateRegistrationTokenSchema = require("../../model/tokenModel/token_validation_model");
-const sanitize = require("mongo-sanitize");
 const AppError = require("../../utils/AppError");
 const {
   generateTokenModel,
@@ -11,15 +9,9 @@ const { generateAccessToken } = require("../../middleware/tokens");
 
 const userAccountVerification = async (req, res, next) => {
   try {
-    const token = req.query.token;
-    const sanitizedData = sanitize(token);
+    const { token } = req.query;
 
-    const { error, value } =
-      validateRegistrationTokenSchema.validate(sanitizedData);
-
-    if (error) return next(new AppError(error.details[0].message, 400));
-
-    const useToken = value;
+    const useToken = token;
 
     //hash the token
     const hashed = crypto.createHash("sha256").update(useToken).digest("hex");

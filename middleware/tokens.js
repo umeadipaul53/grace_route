@@ -15,7 +15,7 @@ function generateAccessToken(user, expiresIn = "5m") {
   );
 }
 
-function generateRegistrationAccessToken(user, expiresIn = "30m") {
+function generateRegistrationAccessToken(user, expiresIn = "15m") {
   return jwt.sign(
     {
       id: user._id.toString(),

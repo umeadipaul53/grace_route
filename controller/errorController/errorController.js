@@ -1,9 +1,24 @@
-module.exports = (err, req, res, next) => {
-  err.statusCode = err.statusCode || 500;
-  err.status = err.status || "error";
+const AppError = require("../../utils/AppError");
 
-  res.status(err.statusCode).json({
-    status: err.status,
-    message: err.message,
+// Global Error Handling Middleware
+function globalErrorHandler(err, req, res, next) {
+  // If the error is an AppError we created
+  if (err instanceof AppError) {
+    return res.status(err.statusCode).json({
+      status: err.status,
+      message: err.message,
+      // Only include details if present
+      ...(err.details ? { details: err.details } : {}),
+    });
+  }
+
+  // For unexpected errors (programming/unknown)
+  console.error("❌ Unexpected Error:", err);
+
+  return res.status(500).json({
+    status: "error",
+    message: "Internal Server Error",
   });
-};
+}
+
+module.exports = globalErrorHandler;

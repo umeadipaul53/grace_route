@@ -1,12 +1,8 @@
-const sanitize = require("mongo-sanitize");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const AppError = require("../../utils/AppError");
 const { generateRegistrationAccessToken } = require("../../middleware/tokens");
-const {
-  userModel,
-  userValidationSchema,
-} = require("../../model/userModel/user_model");
+const userModel = require("../../model/userModel/user_model");
 const { sendEmail } = require("../../email/email_services");
 const {
   generateTokenModel,
@@ -14,39 +10,29 @@ const {
 
 const userReg = async (req, res, next) => {
   try {
-    const sanitizedData = {
-      email: sanitize(req.body.email),
-      password: sanitize(req.body.password),
-      firstname: sanitize(req.body.firstname),
-      lastname: sanitize(req.body.lastname),
-      phone_number: sanitize(req.body.phone_number),
-      role: sanitize(req.body.role),
-    };
+    const { email, password, firstname, lastname, phone_number, role } =
+      req.body;
 
-    const { error, value } = userValidationSchema.validate(sanitizedData);
-
-    if (error) return next(new AppError(error.details[0].message, 400));
-
-    const existingUser = await userModel.findOne({ email: value.email });
+    const existingUser = await userModel.findOne({ email });
 
     if (existingUser)
       return next(
         new AppError(
           "E-mail address you entered is already used by another user. Please enter a different E-mail address.",
-          404
+          409
         )
       );
 
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(value.password, salt);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
     const newUser = await userModel.create({
-      email: value.email,
+      email,
       password: hashedPassword,
-      firstname: value.firstname,
-      lastname: value.lastname,
-      phone_number: value.phone_number,
-      role: value.role,
+      firstname,
+      lastname,
+      phone_number,
+      role,
     });
 
     const name = `${newUser.firstname} ${newUser.lastname}`;
@@ -66,7 +52,7 @@ const userReg = async (req, res, next) => {
     const verifyURL = `https://grace-route-real-estate-company.onrender.com/verify-user-account?token=${token}`;
 
     const sentMail = await sendEmail({
-      to: value.email,
+      to: newUser.email,
       subject: "Welcome to Grace Route real estate company",
       templateName: "welcome",
       variables: {
@@ -77,7 +63,7 @@ const userReg = async (req, res, next) => {
 
     console.log("Email sent?", sentMail);
 
-    if (!sentMail)
+    if (!sentMail || sentMail.rejected.length > 0)
       return next(new AppError("failed to send verification Email", 400));
 
     return res.status(200).json({

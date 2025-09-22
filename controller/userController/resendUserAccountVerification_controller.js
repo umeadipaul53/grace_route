@@ -1,11 +1,7 @@
-const sanitize = require("mongo-sanitize");
 const crypto = require("crypto");
 const AppError = require("../../utils/AppError");
 const { generateRegistrationAccessToken } = require("../../middleware/tokens");
-const {
-  userModel,
-  emailValidationSchema,
-} = require("../../model/userModel/user_model");
+const userModel = require("../../model/userModel/user_model");
 const { sendEmail } = require("../../email/email_services");
 const {
   generateTokenModel,
@@ -13,13 +9,9 @@ const {
 
 const resendUserRegistrationToken = async (req, res, next) => {
   try {
-    const sanitizedData = sanitize(req.body.email);
+    const { email } = req.body;
 
-    const { error, value } = emailValidationSchema.validate(sanitizedData);
-
-    if (error) return next(new AppError(error.details[0].message, 400));
-
-    const user = await userModel.findOne({ email: value });
+    const user = await userModel.findOne({ email });
 
     if (!user) return next(new AppError("Email address not found", 400));
 
@@ -45,7 +37,7 @@ const resendUserRegistrationToken = async (req, res, next) => {
     const name = `${user.firstname} ${user.lastname}`;
 
     const sentMail = await sendEmail({
-      to: value,
+      to: user.email,
       subject: "Welcome to Grace Route real estate company",
       templateName: "welcome",
       variables: {
@@ -56,7 +48,7 @@ const resendUserRegistrationToken = async (req, res, next) => {
 
     console.log("Email sent?", sentMail);
 
-    if (!sentMail)
+    if (!sentMail || sentMail.rejected.length > 0)
       return next(new AppError("failed to send verification Email", 400));
 
     return res.status(200).json({
