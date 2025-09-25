@@ -1,0 +1,105 @@
+<mjml>
+  <mj-head>
+    <mj-preview
+      >Welcome to Grace Route Real Estate – Verify Your Email</mj-preview
+    >
+    <mj-font
+      name="Roboto"
+      href="https://fonts.googleapis.com/css?family=Roboto:400,700"
+    />
+    <mj-attributes>
+      <mj-text
+        font-family="Roboto, Arial, sans-serif"
+        line-height="1.6"
+        color="#333"
+      />
+      <mj-button
+        font-family="Roboto, Arial, sans-serif"
+        font-size="16px"
+        inner-padding="12px 30px"
+        border-radius="6px"
+      />
+    </mj-attributes>
+  </mj-head>
+
+  <mj-body background-color="#f4f4f4">
+    <!-- Header with Logo -->
+    <mj-section background-color="#ffffff" padding="20px 0">
+      <mj-column>
+        <mj-image
+          src="https://grace-route-real-estate-company.onrender.com/images/logo-full.png"
+          alt="Grace Route Real Estate Logo"
+          width="200px"
+        />
+      </mj-column>
+    </mj-section>
+
+    <!-- Hero / Intro Section -->
+    <mj-section
+      background-color="#ffffff"
+      border-radius="8px"
+      padding="30px"
+      css-class="main-card"
+    >
+      <mj-column>
+        <mj-text font-size="20px" font-weight="bold">Hi {{ name }},</mj-text>
+
+        <mj-text font-size="18px" font-weight="bold" color="#007BFF">
+          We wanted to inform you about the status of your property listing:
+        </mj-text>
+
+        <mj-text>
+          Property Name: {{ property_name }} <br />
+          Property Type:
+          {{ property_type }}
+        </mj-text>
+
+        <mj-text>
+          {{ message }}
+        </mj-text>
+
+        <mj-text>
+          We appreciate your trust in our platform and remain committed to
+          helping you connect with the right buyers
+        </mj-text>
+
+        <mj-text>
+          If you have any questions or need assistance, please don’t hesitate to
+          contact us.
+        </mj-text>
+
+        <mj-text font-size="12px" color="#999">
+          If you did not list any property in our platform, please ignore this
+          message.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <!-- Footer -->
+    <mj-section background-color="#ffffff" padding="20px 0" border-radius="8px">
+      <mj-column>
+        <mj-text font-size="14px" color="#555">
+          © {{ year }} Grace Route Real Estate Company Limited. All rights
+          reserved.
+        </mj-text>
+        <mj-social
+          font-size="14px"
+          icon-size="24px"
+          mode="horizontal"
+          align="center"
+        >
+          <mj-social-element name="facebook" href="#"
+            >Facebook</mj-social-element
+          >
+          <mj-social-element name="twitter" href="#">Twitter</mj-social-element>
+          <mj-social-element name="linkedin" href="#"
+            >LinkedIn</mj-social-element
+          >
+          <mj-social-element name="instagram" href="#"
+            >Instagram</mj-social-element
+          >
+        </mj-social>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const {
-  authTokenSchema,
+  authTokenModel,
 } = require("../../model/tokenModel/generate_token_model");
 const {
   generateAccessToken,
@@ -12,12 +12,12 @@ const AppError = require("../../utils/AppError");
 
 const refreshToken = async (req, res, next) => {
   try {
-    const refreshToken = req.cookies.refreshToken;
-    if (!refreshToken) return next(new AppError("No refresh token", 400));
+    const refreshTokenCookie = req.cookies.refreshToken;
+    if (!refreshTokenCookie) return next(new AppError("No refresh token", 400));
 
     let decoded;
     try {
-      decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+      decoded = jwt.verify(refreshTokenCookie, process.env.JWT_REFRESH_SECRET);
     } catch (err) {
       return next(new AppError("Invalid Token", 403));
     }
@@ -25,14 +25,17 @@ const refreshToken = async (req, res, next) => {
     if (!decoded.tokenId)
       return next(new AppError("Missing token ID in refresh token", 400));
 
-    const savedToken = await authTokenSchema.findOne({
+    const savedToken = await authTokenModel.findOne({
       tokenId: decoded.tokenId,
+      userId: decoded.id,
+      token: refreshTokenCookie,
     });
+
     if (!savedToken)
       return next(new AppError("Refresh token reuse detected", 403));
 
     // Delete old refresh token
-    await authTokenSchema.deleteOne({ tokenId: decoded.tokenId });
+    await authTokenModel.deleteOne({ tokenId: decoded.tokenId });
 
     const user = await userModel.findById(decoded.id);
     if (!user) return next(new AppError("User not found", 400));
@@ -46,7 +49,7 @@ const refreshToken = async (req, res, next) => {
     const newRefreshToken = generateRefreshToken(user, newtokenId);
 
     //save new refresh token
-    await authTokenSchema.create({
+    await authTokenModel.create({
       tokenId: newtokenId,
       token: newRefreshToken,
       userId: user._id,

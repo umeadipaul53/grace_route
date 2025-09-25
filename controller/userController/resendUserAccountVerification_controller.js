@@ -9,6 +9,7 @@ const {
 
 const resendUserRegistrationToken = async (req, res, next) => {
   try {
+    const year = new Date().getFullYear();
     const { email } = req.body;
 
     const user = await userModel.findOne({ email });
@@ -43,6 +44,7 @@ const resendUserRegistrationToken = async (req, res, next) => {
       variables: {
         name,
         verifyURL,
+        year,
       },
     });
 

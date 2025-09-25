@@ -19,6 +19,10 @@ const profileImageSchema = new mongoose.Schema(
         message: "Invalid image file format. Only JPG, PNG allowed.",
       },
     },
+    profileImageID: {
+      type: String,
+      required: true, // store Cloudinary public_id
+    },
     fileType: {
       type: String,
       enum: ["image/jpeg", "image/png", "image/jpg"],

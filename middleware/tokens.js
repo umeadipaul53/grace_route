@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-function generateAccessToken(user, expiresIn = "5m") {
+function generateAccessToken(user, expiresIn = "7d") {
   return jwt.sign(
     {
       id: user._id.toString(),

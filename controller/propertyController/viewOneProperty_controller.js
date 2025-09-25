@@ -1,0 +1,22 @@
+const createPropertyModel = require("../../model/propertyModel/createProperty_model");
+const AppError = require("../../utils/AppError");
+
+const viewOnePropertyListing = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const property = await createPropertyModel.findById(id);
+
+    if (!property)
+      return next(new AppError(`This property does not exist`, 404));
+
+    res.status(200).json({
+      status: "success",
+      message: `Property Details`,
+      data: property,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = viewOnePropertyListing;

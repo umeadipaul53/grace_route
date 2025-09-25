@@ -10,6 +10,7 @@ const {
 
 const userReg = async (req, res, next) => {
   try {
+    const year = new Date().getFullYear();
     const { email, password, firstname, lastname, phone_number, role } =
       req.body;
 
@@ -58,6 +59,7 @@ const userReg = async (req, res, next) => {
       variables: {
         name,
         verifyURL,
+        year,
       },
     });
 

@@ -9,6 +9,7 @@ const { sendEmail } = require("../../email/email_services");
 
 const forgotPassword = async (req, res, next) => {
   try {
+    const year = new Date().getFullYear();
     const { email } = req.body;
 
     const user = await userModel.findOne({ email });
@@ -33,6 +34,7 @@ const forgotPassword = async (req, res, next) => {
       variables: {
         name,
         verifyUrl,
+        year,
       },
     });
 
