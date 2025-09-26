@@ -4,6 +4,11 @@ const AppError = require("../../utils/AppError");
 const viewOnePropertyListing = async (req, res, next) => {
   try {
     const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return next(new AppError("Invalid property ID format", 400));
+    }
+
     const property = await createPropertyModel.findById(id);
 
     if (!property)

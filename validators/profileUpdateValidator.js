@@ -15,6 +15,12 @@ const profileUpdateSchema = Joi.object({
     country: Joi.string().optional(),
     postalCode: Joi.string().optional(),
   }).optional(),
+  goals: Joi.object({
+    buying_goals: Joi.string().optional(),
+    timeline: Joi.string().optional(),
+    selling_goals: Joi.string().optional(),
+    educational_goals: Joi.string().optional(),
+  }).optional(),
 });
 
 module.exports = profileUpdateSchema;

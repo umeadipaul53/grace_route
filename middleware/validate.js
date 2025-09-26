@@ -1,14 +1,21 @@
 const AppError = require("../utils/AppError");
 const sanitize = require("mongo-sanitize");
 
-const validate = (schema, property = "body") => {
+const validate = (schema = null, property = "body") => {
   return (req, res, next) => {
+    // Use provided schema or fallback to req.validationSchema
+    const activeSchema = schema || req.validationSchema;
+
+    if (!activeSchema) {
+      return next(new AppError("No validation schema provided", 500));
+    }
+
     const sanitizedInput = sanitize(req[property]);
 
-    const { error, value } = schema.validate(sanitizedInput, {
-      abortEarly: false, // return all errors, not just the first
+    const { error, value } = activeSchema.validate(sanitizedInput, {
+      abortEarly: false, // collect all errors
       stripUnknown: true, // remove unknown fields
-      convert: true, // coerce types (e.g., string → number)
+      convert: true, // auto-convert types (e.g., "123" → 123)
     });
 
     if (error) {

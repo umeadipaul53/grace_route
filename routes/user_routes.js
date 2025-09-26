@@ -11,6 +11,7 @@ const {
   propertyValidationSchema,
   propertyUpdateValidationSchema,
 } = require("../validators/propertyValidator");
+const buyPropertyValidationSchema = require("../validators/buyPropertyValidator");
 const authorizeRoles = require("../middleware/role");
 const authenticateToken = require("../middleware/auth");
 const updateProfile = require("../controller/userAccountController/updateProfile_controller");
@@ -23,19 +24,39 @@ const userProfile = require("../controller/userAccountController/profile_control
 const logout = require("../controller/userAccountController/logout");
 const createProperty = require("../controller/propertyController/createProperty_conroller");
 const updateProperty = require("../controller/propertyController/updateProperty_controller");
+const buyProperty = require("../controller/propertyController/buyProperty_controller");
+const updateGoals = require("../controller/userAccountController/updateGoals_controller");
+const tourValidationMiddleware = require("../middleware/tour");
+const createTourRequest = require("../controller/tourController/createTour_controller");
 
 //User Account activities
 user
+  .route("/request-tour")
+  .post(
+    authenticateToken,
+    authorizeRoles("user"),
+    validate(tourValidationMiddleware),
+    createTourRequest
+  );
+user.route("/user").get(authenticateToken, authorizeRoles("user"), UserDetail);
+user.route("/refresh-token").post(refreshToken);
+user
   .route("/profile-update")
-  .put(
+  .patch(
     authenticateToken,
     authorizeRoles("user"),
     validate(profileUpdateSchema),
     updateProfile
   );
+user
+  .route("/goals-update")
+  .patch(
+    authenticateToken,
+    authorizeRoles("user"),
+    validate(profileUpdateSchema),
+    updateGoals
+  );
 
-user.route("/user").get(authenticateToken, authorizeRoles("user"), UserDetail);
-user.route("/refresh-token").post(refreshToken);
 user
   .route("/profile-image")
   .post(
@@ -99,6 +120,14 @@ user
     parseJsonFields,
     validate(propertyUpdateValidationSchema),
     updateProperty
+  );
+user
+  .route("/buy-property/:id")
+  .post(
+    authenticateToken,
+    authorizeRoles("user"),
+    validate(buyPropertyValidationSchema),
+    buyProperty
   );
 user.route("/logout").post(logout);
 

@@ -2,7 +2,6 @@ const mongoose = require("../../config/db");
 
 const addressSchema = new mongoose.Schema(
   {
-    label: { type: String, default: "" },
     house_number: { type: String, default: "" },
     street: { type: String, default: "" },
     city: { type: String, default: "" },
@@ -16,6 +15,18 @@ const addressSchema = new mongoose.Schema(
   }
 );
 
+const goalsSchema = new mongoose.Schema(
+  {
+    buying_goals: { type: String, default: "" },
+    timeline: { type: String, default: "" },
+    selling_goals: { type: String, default: "" },
+    educational_goals: { type: String, default: "" },
+  },
+  {
+    _id: false, //prevents creating a separate _id for goals
+  }
+);
+
 const userSchema = new mongoose.Schema(
   {
     email: { type: String, unique: true },
@@ -24,6 +35,7 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true },
     phone_number: { type: String, required: true },
     address: addressSchema,
+    goals: goalsSchema,
     role: {
       type: String,
       enum: ["user"],

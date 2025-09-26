@@ -17,10 +17,15 @@ const {
   verifyChangePasswordToken,
   handleChangePassword,
 } = require("../controller/userController/changePassword_controller");
+const tourValidationMiddleware = require("../middleware/tour");
+const createTourRequest = require("../controller/tourController/createTour_controller");
 
 auth
   .route("/register")
   .post(authRateLimiter, validate(userValidationSchema), userReg);
+auth
+  .route("/request-tour")
+  .post(validate(tourValidationMiddleware), createTourRequest);
 auth
   .route("/verify-user-account")
   .get(

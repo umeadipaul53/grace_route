@@ -9,6 +9,10 @@ const updatePropertyListingStatus = async (req, res, next) => {
     const { id } = req.params;
     const { status } = req.body;
 
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return next(new AppError("Invalid property ID format", 400));
+    }
+
     const allowedStatus = ["available", "sold", "pending", "rejected"];
     if (!allowedStatus.includes(status)) {
       return next(new AppError("Invalid status provided", 400));

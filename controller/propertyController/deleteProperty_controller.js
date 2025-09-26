@@ -6,6 +6,10 @@ const deletePropertyListing = async (req, res, next) => {
   try {
     const { id } = req.query;
 
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return next(new AppError("Invalid Property ID format", 400));
+    }
+
     // ✅ Find property
     const property = await createPropertyModel.findById(id);
     if (!property) {

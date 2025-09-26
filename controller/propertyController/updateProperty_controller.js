@@ -9,6 +9,10 @@ const updateProperty = async (req, res, next) => {
     const { id } = req.params;
     const userRole = req.user?.role;
 
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return next(new AppError("Invalid property ID format", 400));
+    }
+
     // ✅ Ensure we have request body
     const updateData = { ...req.body };
     console.log("📝 Parsed Body =>", updateData);
