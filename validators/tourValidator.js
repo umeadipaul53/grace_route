@@ -11,7 +11,7 @@ const objectId = (value, helpers) => {
 
 // Guest schema (not logged in)
 const guestTourRequestSchema = Joi.object({
-  propertyId: Joi.string().custom(objectId).required(),
+  property: Joi.string().custom(objectId).required(),
   date: Joi.date().required(),
   name: Joi.string().min(2).max(50).required(),
   email: Joi.string().email().required(),
@@ -20,7 +20,7 @@ const guestTourRequestSchema = Joi.object({
 
 // Logged-in schema (user info is fetched from DB)
 const userTourRequestSchema = Joi.object({
-  propertyId: Joi.string().custom(objectId).required(),
+  property: Joi.string().custom(objectId).required(),
   date: Joi.date().required(),
 });
 

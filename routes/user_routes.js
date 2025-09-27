@@ -34,6 +34,7 @@ const {
   removeFavourite,
   getFavourites,
 } = require("../controller/favouriteController/favouriteController");
+const viewAllUserListing = require("../controller/propertyController/viewUserListedProperty_controller");
 
 //User Account activities
 user
@@ -41,7 +42,8 @@ user
   .post(
     authenticateToken,
     authorizeRoles("user"),
-    validate(tourValidationMiddleware),
+    tourValidationMiddleware,
+    validate(),
     createTourRequest
   );
 user.route("/user").get(authenticateToken, authorizeRoles("user"), UserDetail);
@@ -90,7 +92,7 @@ user
   .route("/upload-property")
   .post(
     authenticateToken,
-    authorizeRoles("user", "admin"),
+    authorizeRoles("user"),
     upload.array("propertyImages"),
     validateImageFile,
     parseJsonFields,
@@ -98,10 +100,13 @@ user
     createProperty
   );
 user
+  .route("/view-my-property-listing")
+  .get(authenticateToken, authorizeRoles("user"), viewAllUserListing);
+user
   .route("/edit-properties/:id")
   .put(
     authenticateToken,
-    authorizeRoles("user", "admin"),
+    authorizeRoles("user"),
     upload.array("propertyImages"),
     validateImageFile,
     parseJsonFields,
@@ -112,7 +117,7 @@ user
   .route("/edit-properties/:id")
   .patch(
     authenticateToken,
-    authorizeRoles("user", "admin"),
+    authorizeRoles("user"),
     validate(propertyUpdateValidationSchema),
     updateProperty
   );
@@ -120,7 +125,7 @@ user
   .route("/edit-properties-with-images/:id")
   .patch(
     authenticateToken,
-    authorizeRoles("user", "admin"),
+    authorizeRoles("user"),
     upload.array("propertyImages"),
     validateImageFile,
     parseJsonFields,

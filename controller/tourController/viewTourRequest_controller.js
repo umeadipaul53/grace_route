@@ -9,7 +9,7 @@ const viewAllTourRequest = async (req, res, next) => {
 
     if (!tours || tours.length === 0)
       return next(
-        new AppError(`There are no pending tours request at the moment`, 404)
+        new AppError(`There are no ${status} tours request at the moment`, 404)
       );
 
     res.status(200).json({

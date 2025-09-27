@@ -10,7 +10,6 @@ const userReg = require("../controller/userController/createUserAccount_controll
 const userAccountVerification = require("../controller/userController/verifyUserAccount_controller");
 const resendUserRegistrationToken = require("../controller/userController/resendUserAccountVerification_controller");
 const userLogin = require("../controller/userController/userLogin_controller");
-
 const { authRateLimiter } = require("../middleware/security");
 const forgotPassword = require("../controller/userController/forgotPassword_controller");
 const {
@@ -19,13 +18,15 @@ const {
 } = require("../controller/userController/changePassword_controller");
 const tourValidationMiddleware = require("../middleware/tour");
 const createTourRequest = require("../controller/tourController/createTour_controller");
+const viewAllPropertyListing = require("../controller/propertyController/viewAllPropertyListing_controller");
+const viewOnePropertyListing = require("../controller/propertyController/viewOneProperty_controller");
 
 auth
   .route("/register")
   .post(authRateLimiter, validate(userValidationSchema), userReg);
 auth
   .route("/request-tour")
-  .post(validate(tourValidationMiddleware), createTourRequest);
+  .post(tourValidationMiddleware, validate(), createTourRequest);
 auth
   .route("/verify-user-account")
   .get(
@@ -56,5 +57,7 @@ auth
 auth
   .route("/login")
   .post(authRateLimiter, validate(loginValidationSchema), userLogin);
+auth.route("/view-property-listing/:id").get(viewOnePropertyListing);
+auth.route("/view-all-property-listing").get(viewAllPropertyListing);
 
 module.exports = auth;

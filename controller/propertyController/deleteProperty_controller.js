@@ -5,7 +5,7 @@ const deleteCloudinaryImages = require("../../utils/deletePropertyImages");
 
 const deletePropertyListing = async (req, res, next) => {
   try {
-    const { id } = req.query;
+    const { id } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return next(new AppError("Invalid Property ID format", 400));

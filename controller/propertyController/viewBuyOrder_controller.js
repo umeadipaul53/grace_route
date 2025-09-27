@@ -10,10 +10,10 @@ const viewBuyOrder = async (req, res, next) => {
     const orders = await buyPropertyModel
       .find(filter)
       .populate(
-        "property_listing",
+        "property",
         "property_name property_type price homeType plotArea location"
       ) // populate specific fields
-      .populate("user", "firstname lastname email phone_number"); // populate buyer info
+      .populate("buyer", "firstname lastname email phone_number"); // populate buyer info
 
     if (!orders || orders.length === 0) {
       return next(
