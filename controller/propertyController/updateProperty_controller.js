@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const createPropertyModel = require("../../model/propertyModel/createProperty_model");
 const cloudinary = require("cloudinary").v2;
 const streamifier = require("streamifier");

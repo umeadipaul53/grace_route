@@ -12,6 +12,7 @@ const {
   propertyUpdateValidationSchema,
 } = require("../validators/propertyValidator");
 const buyPropertyValidationSchema = require("../validators/buyPropertyValidator");
+const favouriteValidation = require("../validators/favouriteValidator");
 const authorizeRoles = require("../middleware/role");
 const authenticateToken = require("../middleware/auth");
 const updateProfile = require("../controller/userAccountController/updateProfile_controller");
@@ -28,6 +29,11 @@ const buyProperty = require("../controller/propertyController/buyProperty_contro
 const updateGoals = require("../controller/userAccountController/updateGoals_controller");
 const tourValidationMiddleware = require("../middleware/tour");
 const createTourRequest = require("../controller/tourController/createTour_controller");
+const {
+  addFavourite,
+  removeFavourite,
+  getFavourites,
+} = require("../controller/favouriteController/favouriteController");
 
 //User Account activities
 user
@@ -129,6 +135,25 @@ user
     validate(buyPropertyValidationSchema),
     buyProperty
   );
+user
+  .route("/add-to-favourite/:id")
+  .post(
+    authenticateToken,
+    authorizeRoles("user"),
+    validate(favouriteValidation),
+    addFavourite
+  );
+user
+  .route("/remove-from-favourite/:id")
+  .delete(
+    authenticateToken,
+    authorizeRoles("user"),
+    validate(favouriteValidation),
+    removeFavourite
+  );
+user
+  .route("/get-favourites")
+  .get(authenticateToken, authorizeRoles("user"), getFavourites);
 user.route("/logout").post(logout);
 
 module.exports = user;

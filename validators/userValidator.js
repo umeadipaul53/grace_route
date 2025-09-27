@@ -35,7 +35,7 @@ const userValidationSchema = Joi.object({
         "Phone number must be a valid international number.",
       "string.empty": "Phone number is required.",
     }),
-  role: Joi.string().valid("user").default("user"),
+  role: Joi.string().valid("user", "admin").default("user"),
 });
 
 module.exports = { userValidationSchema };

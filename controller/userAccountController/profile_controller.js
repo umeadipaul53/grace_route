@@ -25,6 +25,12 @@ const userProfile = async (req, res, next) => {
         country: user.address.country,
         postalcode: user.address.postalCode,
       },
+      goals: {
+        buying_goals: user.goals.buying_goals,
+        timeline: user.goals.timeline,
+        selling_goals: user.goals.selling_goals,
+        educational_goals: user.goals.educational_goals,
+      },
     });
   } catch (error) {
     next(error);

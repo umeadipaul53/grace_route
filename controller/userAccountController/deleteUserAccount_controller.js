@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const userModel = require("../../model/userModel/user_model");
 const AppError = require("../../utils/AppError");
 
@@ -5,6 +6,9 @@ const deleteUser = async (req, res, next) => {
   try {
     const { id } = req.params;
 
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return next(new AppError("Invalid user ID format", 400));
+    }
     // ✅ Delete in one step
     const user = await userModel.findByIdAndDelete(id);
     if (!user) {

@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const createPropertyModel = require("../../model/propertyModel/createProperty_model");
 const AppError = require("../../utils/AppError");
 const deleteCloudinaryImages = require("../../utils/deletePropertyImages");

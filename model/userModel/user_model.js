@@ -38,7 +38,7 @@ const userSchema = new mongoose.Schema(
     goals: goalsSchema,
     role: {
       type: String,
-      enum: ["user"],
+      enum: ["user", "admin"],
       default: "user",
     },
     verified: { type: Boolean, default: false },

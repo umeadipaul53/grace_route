@@ -3,6 +3,7 @@ const admin_routes = express.Router();
 
 const { upload, validateImageFile } = require("../config/multer");
 const validate = require("../middleware/validate");
+const paramQueryValidation = require("../validators/params_queryValidator");
 const parseJsonFields = require("../middleware/parseJsonFields");
 const {
   propertyValidationSchema,
@@ -19,6 +20,7 @@ const updateBuyOrderStatus = require("../controller/propertyController/settleBuy
 const viewBuyOrder = require("../controller/propertyController/viewBuyOrder_controller");
 const settleTourRequest = require("../controller/tourController/settleTour_controller");
 const viewAllTourRequest = require("../controller/tourController/viewTourRequest_controller");
+const updatePropertyListingStatus = require("../controller/propertyController/updatePropertyListingStatus_controller");
 
 //Admin Account activities
 admin_routes
@@ -41,6 +43,15 @@ admin_routes
 admin_routes
   .route("/view-all-tour-request")
   .get(authenticateToken, authorizeRoles("admin"), viewAllTourRequest);
+
+admin_routes
+  .route("/update-property-listing/:id")
+  .patch(
+    authenticateToken,
+    authorizeRoles("admin"),
+    updatePropertyListingStatus
+  );
+
 admin_routes.route("/logout").post(logout);
 
 module.exports = admin_routes;

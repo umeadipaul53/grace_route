@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const createPropertyModel = require("../../model/propertyModel/createProperty_model");
 const userModel = require("../../model/userModel/user_model");
 const buyPropertyModel = require("../../model/propertyModel/buyProperty_model");
