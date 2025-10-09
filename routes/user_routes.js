@@ -16,7 +16,7 @@ const favouriteValidation = require("../validators/favouriteValidator");
 const authorizeRoles = require("../middleware/role");
 const authenticateToken = require("../middleware/auth");
 const updateProfile = require("../controller/userAccountController/updateProfile_controller");
-const refreshToken = require("../controller/userAccountController/refreshUserToken_controller");
+
 const {
   uploadProfileImage,
   replaceProfileImage,
@@ -47,7 +47,7 @@ user
     createTourRequest
   );
 user.route("/user").get(authenticateToken, authorizeRoles("user"), UserDetail);
-user.route("/refresh-token").post(refreshToken);
+
 user
   .route("/profile-update")
   .patch(
@@ -72,7 +72,6 @@ user
     authorizeRoles("user"),
     upload.single("profileImage"),
     validateImageFile,
-    validate(profileImageValidation),
     uploadProfileImage
   );
 user
@@ -82,7 +81,6 @@ user
     authorizeRoles("user"),
     upload.single("profileImage"),
     validateImageFile,
-    validate(profileImageValidation),
     replaceProfileImage
   );
 user

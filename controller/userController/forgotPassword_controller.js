@@ -25,7 +25,7 @@ const forgotPassword = async (req, res, next) => {
     });
 
     const name = `${user.firstname} ${user.lastname}`;
-    const verifyUrl = `https://exam-project-frontend.vercel.app/change_password?token=${token}`;
+    const verifyUrl = `https://gracerouteltd.com/change-password?token=${token}`;
 
     const sentMail = await sendEmail({
       to: user.email,

@@ -6,22 +6,29 @@ const sanitizeHtml = require("sanitize-html");
 const { validationResult } = require("express-validator");
 const { doubleCsrf } = require("csrf-csrf");
 const AppError = require("../utils/AppError");
+const isProduction = process.env.NODE_ENV === "production";
 
 /* ---------------------------
    1. Rate Limiters
 --------------------------- */
 const authRateLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 mins
-  max: 5, // 5 requests/IP
-  message: "Too many login attempts. Try again later.",
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5,
+  message: {
+    status: "fail",
+    message: "Too many login attempts. Try again later.",
+  },
   standardHeaders: true,
   legacyHeaders: false,
 });
 
 const apiRateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100, // 100 requests/IP
-  message: "Too many requests. Please slow down.",
+  max: 100,
+  message: {
+    status: "fail",
+    message: "Too many requests. Please slow down.",
+  },
   standardHeaders: true,
   legacyHeaders: false,
 });
@@ -29,37 +36,45 @@ const apiRateLimiter = rateLimit({
 /* ---------------------------
    2. CORS Setup
 --------------------------- */
+const allowedOrigins = [
+  "http://localhost:5173", // Vite frontend (development)
+  "http://localhost:3300", // backend self-requests (needed for CSP)
+  "https://gracerouteltd.com", // Production frontend
+];
+
 const corsOptions = {
-  origin: ["http://localhost:5173", "https://gracerouteltd.com"],
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true, // allow cookies
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true); // allow Postman or curl
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    callback(new Error("Not allowed by CORS"));
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true, // allow cookies and credentials
 };
 
 /* ---------------------------
-   3. CSRF Protection (csrf-csrf)
+   3. CSRF Protection
 --------------------------- */
 const { doubleCsrfProtection } = doubleCsrf({
   getSecret: () => process.env.CSRF_SECRET || "default_csrf_secret",
   cookieName: "__Host-csrf-token",
   cookieOptions: {
     httpOnly: true,
-    sameSite: "Strict",
-    secure: process.env.NODE_ENV === "production",
+    sameSite: isProduction ? "None" : "Lax",
+    secure: isProduction,
+    path: "/",
   },
   size: 64,
-  ignoredMethods: ["GET", "HEAD", "OPTIONS"], // don’t protect safe methods
+  ignoredMethods: ["GET", "HEAD", "OPTIONS"],
 });
 
 const csrfMiddleware = doubleCsrfProtection;
 
 /* ---------------------------
-   4. Sanitization
+   4. Input Sanitization
 --------------------------- */
 function sanitizeInput(input) {
-  return sanitizeHtml(input, {
-    allowedTags: [],
-    allowedAttributes: {},
-  });
+  return sanitizeHtml(input, { allowedTags: [], allowedAttributes: {} });
 }
 
 function sanitizeMiddleware(req, res, next) {
@@ -70,11 +85,18 @@ function sanitizeMiddleware(req, res, next) {
       }
     }
   }
+  if (req.query && typeof req.query === "object") {
+    for (const key in req.query) {
+      if (typeof req.query[key] === "string") {
+        req.query[key] = sanitizeInput(req.query[key]);
+      }
+    }
+  }
   next();
 }
 
 /* ---------------------------
-   5. Express-validator error handler
+   5. Validation Middleware
 --------------------------- */
 function validateRequest(req, res, next) {
   const errors = validationResult(req);
@@ -88,8 +110,8 @@ function validateRequest(req, res, next) {
    6. Apply All Security Middleware
 --------------------------- */
 function applySecurity(app) {
+  // Helmet - secure HTTP headers
   app.use(helmet());
-  const isProduction = process.env.NODE_ENV === "production";
 
   if (isProduction) {
     app.use(
@@ -101,29 +123,32 @@ function applySecurity(app) {
     );
   }
 
+  // ✅ Add backend to connectSrc
   app.use(
     helmet.contentSecurityPolicy({
       directives: {
         defaultSrc: ["'self'"],
         scriptSrc: [
           "'self'",
-          "https://yourfrontenddomain.com",
+          "https://gracerouteltd.com",
           "https://cdn.jsdelivr.net",
         ],
-        styleSrc: [
-          "'self'",
-          "https://fonts.googleapis.com",
-          "'unsafe-inline'", // remove if no inline styles
-        ],
+        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
         fontSrc: ["'self'", "https://fonts.gstatic.com"],
         imgSrc: ["'self'", "data:", "https:"],
-        connectSrc: ["'self'", "https://yourfrontenddomain.com"],
+        connectSrc: [
+          "'self'",
+          "http://localhost:5173",
+          "http://localhost:3300",
+          "https://gracerouteltd.com",
+        ],
         objectSrc: ["'none'"],
         upgradeInsecureRequests: [],
       },
     })
   );
 
+  // Additional helmet protections
   app.use(helmet.frameguard({ action: "sameorigin" }));
   app.use(helmet.noSniff());
   app.use(helmet.ieNoOpen());
@@ -131,16 +156,15 @@ function applySecurity(app) {
   app.use(helmet.permittedCrossDomainPolicies({ permittedPolicies: "none" }));
   app.use(helmet.hidePoweredBy());
 
+  // ✅ Must come before routes
   app.use(cors(corsOptions));
+  app.options(/^\/.*$/, cors(corsOptions));
+
   app.use(hpp());
   app.use(sanitizeMiddleware);
-
   app.use("/api", apiRateLimiter);
 }
 
-/* ---------------------------
-   Exports
---------------------------- */
 module.exports = {
   authRateLimiter,
   apiRateLimiter,

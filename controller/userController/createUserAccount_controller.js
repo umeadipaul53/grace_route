@@ -50,7 +50,7 @@ const userReg = async (req, res, next) => {
 
     if (!tokenUpload) return next(new AppError("Token did not register", 400));
 
-    const verifyURL = `https://grace-route-real-estate-company.onrender.com/verify-user-account?token=${token}`;
+    const verifyURL = `https://gracerouteltd.com/verify-user-account?token=${token}`;
 
     const sentMail = await sendEmail({
       to: newUser.email,
@@ -74,12 +74,6 @@ const userReg = async (req, res, next) => {
       data: {
         email: newUser.email,
         name: name,
-        firstname: newUser.firstname,
-        lastname: newUser.lastname,
-        phone_number: newUser.phone_number,
-        role: newUser.role,
-        link: verifyURL,
-        token: token,
       },
     });
   } catch (err) {

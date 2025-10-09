@@ -27,7 +27,7 @@ const verifyChangePasswordToken = async (req, res, next) => {
       return next(err);
     }
 
-    res.status(200).json({ message: "Token valid" });
+    res.status(200).json({ valid: true, message: "Token valid" });
   } catch (err) {
     next(err);
   }

@@ -33,7 +33,7 @@ const resendUserRegistrationToken = async (req, res, next) => {
       hash: hashed,
     });
 
-    const verifyURL = `https://grace-route-real-estate-company.onrender.com/verify-user-account?token=${token}`;
+    const verifyURL = `https://gracerouteltd.com/verify-user-account?token=${token}`;
 
     const name = `${user.firstname} ${user.lastname}`;
 
