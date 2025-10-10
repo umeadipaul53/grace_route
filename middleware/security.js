@@ -43,7 +43,7 @@ const allowedOrigins = [
   "https://gracerouteltd.com", // production domain
   "https://www.gracerouteltd.com", // www alias
   "https://grace-route-frontend.vercel.app", // vercel preview/staging
-  "https://graceroute-backend.onrender.com", // render backend origin
+  "https://grace-route-real-estate-company.onrender.com", // render backend origin
 ];
 
 const corsOptions = {
@@ -154,7 +154,7 @@ function applySecurity(app) {
           "https://gracerouteltd.com",
           "https://www.gracerouteltd.com",
           "https://grace-route-frontend.vercel.app",
-          "https://graceroute-backend.onrender.com", // backend Render URL
+          "https://grace-route-real-estate-company.onrender.com", // backend Render URL
         ],
         objectSrc: ["'none'"],
         upgradeInsecureRequests: [],
