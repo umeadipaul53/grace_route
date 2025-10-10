@@ -25,23 +25,26 @@ const forgotPassword = async (req, res, next) => {
     });
 
     const name = `${user.firstname} ${user.lastname}`;
-    const verifyURL = `https://gracerouteltd.com/change-password?token=${token}`;
+    const resetURL = `https://gracerouteltd.com/change-password?token=${token}`;
 
     const sentMail = await sendEmail({
       to: user.email,
       subject: "Password Reset",
-      templateName: "forgotpassword",
+      templateName: "forgotpassword", // must exist as 'templates/welcome.mjml'
       variables: {
         name,
-        verifyURL,
+        resetURL,
         year,
       },
     });
 
-    console.log("Full sentMail:", sentMail);
+    // Optional: handle success/failure
+    if (!sentMail) {
+      console.error("❌ Failed to send verification email.");
+      return next(new AppError("Failed to send verification email", 400));
+    }
 
-    if (!sentMail || sentMail.rejected.length > 0)
-      return next(new AppError("Failed to send forgot password email", 500));
+    console.log("✅ Verification email sent successfully to:", user.email);
 
     return res.status(200).json({
       message: "Password reset confirmation email was sent to your email",

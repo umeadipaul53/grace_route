@@ -48,10 +48,12 @@ const resendUserRegistrationToken = async (req, res, next) => {
       },
     });
 
-    console.log("Email sent?", sentMail);
+    if (!sentMail) {
+      console.error("❌ Failed to send verification email.");
+      return next(new AppError("Failed to send verification email", 400));
+    }
 
-    if (!sentMail || sentMail.rejected.length > 0)
-      return next(new AppError("failed to send verification Email", 400));
+    console.log("✅ Verification email sent successfully to:", user.email);
 
     return res.status(200).json({
       message: "Account verification email resent",

@@ -1,54 +1,58 @@
 <mjml>
   <mj-head>
-    <mj-preview
-      >Welcome to Grace Route Real Estate – Verify Your Email</mj-preview
-    >
-    <mj-font
-      name="Roboto"
-      href="https://fonts.googleapis.com/css?family=Roboto:400,700"
-    />
     <mj-attributes>
-      <mj-text
-        font-family="Roboto, Arial, sans-serif"
-        line-height="1.6"
-        color="#333"
-      />
+      <mj-all font-family="Inter, Arial, sans-serif"></mj-all>
+      <mj-text color="#333333" font-size="16px" line-height="1.6"></mj-text>
       <mj-button
-        font-family="Roboto, Arial, sans-serif"
+        background-color="#047857"
+        color="#ffffff"
         font-size="16px"
-        inner-padding="12px 30px"
         border-radius="6px"
-      />
+        padding="16px 24px"
+      ></mj-button>
     </mj-attributes>
+
+    <mj-style inline="inline">
+      .footer-link a {
+        color: #ffffff !important;
+        text-decoration: underline;
+      }
+    </mj-style>
   </mj-head>
 
-  <mj-body background-color="#f4f4f4">
-    <!-- Header with Logo -->
+  <mj-body background-color="#f8f9fa">
+    <!-- HEADER -->
     <mj-section background-color="#ffffff" padding="20px 0">
       <mj-column>
         <mj-image
-          src="https://grace-route-real-estate-company.onrender.com/images/logo-full.png"
-          alt="Grace Route Real Estate Logo"
-          width="200px"
+          width="120px"
+          src="https://www.gracerouteltd.com/logo.png"
+          alt="Grace Route Limited Logo"
         />
       </mj-column>
     </mj-section>
 
-    <!-- Hero / Intro Section -->
-    <mj-section
-      background-color="#ffffff"
-      border-radius="8px"
-      padding="30px"
-      css-class="main-card"
-    >
+    <!-- HERO -->
+    <mj-section background-color="#047857" padding="40px 0 20px 0">
       <mj-column>
-        <mj-text font-size="20px" font-weight="bold">Dear {{ name }},</mj-text>
-
-        <mj-text font-size="18px" font-weight="bold" color="#007BFF">
-          Welcome to Grace Route Real Estate Company Limited – Your Trusted
-          Partner in Real Estate!
+        <mj-text
+          align="center"
+          color="#ffffff"
+          font-size="22px"
+          font-weight="bold"
+        >
+          Welcome to Grace Route Limited!
         </mj-text>
+        <mj-text align="center" color="#d1fae5" font-size="16px">
+          Your trusted real estate partner for seamless property ownership.
+        </mj-text>
+      </mj-column>
+    </mj-section>
 
+    <!-- MAIN CONTENT -->
+    <mj-section background-color="#ffffff" padding="30px 15px">
+      <mj-column>
+        <mj-text>Hello {{ name }},</mj-text>
         <mj-text>
           We’re thrilled to have you here! With decades of experience turning
           real estate dreams into reality, we’re more than just a real estate
@@ -68,49 +72,51 @@
           expert insights to help you make informed decisions in a fast-moving
           market.
         </mj-text>
-
         <mj-text>
-          Kindly click on the button below to verify your email address.
+          We’re excited to have you on board! Before getting started, please
+          verify your email address by clicking the button below.
         </mj-text>
 
-        <mj-button
-          href="{{verifyURL}}"
-          background-color="#007BFF"
-          color="#ffffff"
-        >
-          Verify Email
+        <mj-button href="{{verifyURL}}" align="center">
+          Verify My Account
         </mj-button>
 
-        <mj-text font-size="12px" color="#999">
-          If you did not sign up, please ignore this message.
+        <mj-text>
+          If the button above doesn’t work, copy and paste the link below into
+          your browser:
+        </mj-text>
+
+        <mj-text color="#047857" font-size="14px" word-break="break-all">
+          {{ verifyURL }}
+        </mj-text>
+
+        <mj-text>
+          Once verified, you’ll be able to explore exclusive property listings,
+          investment opportunities, and personalized offers.
+        </mj-text>
+
+        <mj-text>
+          Best regards,<br />
+          <strong>The Grace Route Team</strong>
         </mj-text>
       </mj-column>
     </mj-section>
 
-    <!-- Footer -->
-    <mj-section background-color="#ffffff" padding="20px 0" border-radius="8px">
+    <!-- FOOTER -->
+    <mj-section background-color="#111827" padding="20px 0">
       <mj-column>
-        <mj-text font-size="14px" color="#555">
-          © {{ year }} Grace Route Real Estate Company Limited. All rights
-          reserved.
+        <mj-text align="center" color="#ffffff" font-size="13px">
+          © {{ year }} Grace Route Limited. All rights reserved.
         </mj-text>
-        <mj-social
-          font-size="14px"
-          icon-size="24px"
-          mode="horizontal"
+        <mj-text
           align="center"
+          color="#9ca3af"
+          font-size="12px"
+          class="footer-link"
         >
-          <mj-social-element name="facebook" href="#"
-            >Facebook</mj-social-element
-          >
-          <mj-social-element name="twitter" href="#">Twitter</mj-social-element>
-          <mj-social-element name="linkedin" href="#"
-            >LinkedIn</mj-social-element
-          >
-          <mj-social-element name="instagram" href="#"
-            >Instagram</mj-social-element
-          >
-        </mj-social>
+          <a href="https://www.gracerouteltd.com">Visit Our Website</a> •
+          <a href="mailto:info@gracerouteltd.com">Contact Support</a>
+        </mj-text>
       </mj-column>
     </mj-section>
   </mj-body>

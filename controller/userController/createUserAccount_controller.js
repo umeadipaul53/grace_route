@@ -50,23 +50,28 @@ const userReg = async (req, res, next) => {
 
     if (!tokenUpload) return next(new AppError("Token did not register", 400));
 
-    const verifyURL = `https://gracerouteltd.com/verify-user-account?token=${token}`;
+    // Construct the verification URL
+    const verifyURL = `https://www.gracerouteltd.com/verify-user-account?token=${token}`;
 
+    // Send the verification email using Resend
     const sentMail = await sendEmail({
       to: newUser.email,
-      subject: "Welcome to Grace Route real estate company",
-      templateName: "welcome",
+      subject: "Welcome to Grace Route Limited — Verify Your Account",
+      templateName: "welcome", // must exist as 'templates/welcome.mjml'
       variables: {
-        name,
+        name: name,
         verifyURL,
         year,
       },
     });
 
-    console.log("Email sent?", sentMail);
+    // Optional: handle success/failure
+    if (!sentMail) {
+      console.error("❌ Failed to send verification email.");
+      return next(new AppError("Failed to send verification email", 400));
+    }
 
-    if (!sentMail || sentMail.rejected.length > 0)
-      return next(new AppError("failed to send verification Email", 400));
+    console.log("✅ Verification email sent successfully to:", newUser.email);
 
     return res.status(200).json({
       message:

@@ -22,6 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static("public"));
 
+app.set("trust proxy", 1);
 // Routes
 const authRoutes = require("./routes/auth_routes");
 const userRoutes = require("./routes/user_routes");
