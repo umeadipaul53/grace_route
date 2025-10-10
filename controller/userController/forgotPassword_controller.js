@@ -25,7 +25,7 @@ const forgotPassword = async (req, res, next) => {
     });
 
     const name = `${user.firstname} ${user.lastname}`;
-    const verifyUrl = `https://gracerouteltd.com/change-password?token=${token}`;
+    const verifyURL = `https://gracerouteltd.com/change-password?token=${token}`;
 
     const sentMail = await sendEmail({
       to: user.email,
@@ -33,7 +33,7 @@ const forgotPassword = async (req, res, next) => {
       templateName: "forgotpassword",
       variables: {
         name,
-        verifyUrl,
+        verifyURL,
         year,
       },
     });
@@ -47,7 +47,7 @@ const forgotPassword = async (req, res, next) => {
       message: "Password reset confirmation email was sent to your email",
       data: {
         email: user.email,
-        link: verifyUrl,
+        link: verifyURL,
       },
     });
   } catch (err) {

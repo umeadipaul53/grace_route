@@ -74,7 +74,7 @@
         </mj-text>
 
         <mj-button
-          href="{{verifyUrl}}"
+          href="{{verifyURL}}"
           background-color="#007BFF"
           color="#ffffff"
         >

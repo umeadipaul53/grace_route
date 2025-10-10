@@ -6,6 +6,7 @@ const sanitizeHtml = require("sanitize-html");
 const { validationResult } = require("express-validator");
 const { doubleCsrf } = require("csrf-csrf");
 const AppError = require("../utils/AppError");
+
 const isProduction = process.env.NODE_ENV === "production";
 
 /* ---------------------------
@@ -39,13 +40,21 @@ const apiRateLimiter = rateLimit({
 const allowedOrigins = [
   "http://localhost:5173", // Vite frontend (development)
   "http://localhost:3300", // backend self-requests (needed for CSP)
-  "https://gracerouteltd.com", // Production frontend
+  "https://gracerouteltd.com", // production domain
+  "https://www.gracerouteltd.com", // www alias
+  "https://grace-route-frontend.vercel.app", // vercel preview/staging
+  "https://graceroute-backend.onrender.com", // render backend origin
 ];
 
 const corsOptions = {
   origin: function (origin, callback) {
+    // log origin for debugging
+    if (origin) console.log("🟡 CORS request from:", origin);
+
     if (!origin) return callback(null, true); // allow Postman or curl
     if (allowedOrigins.includes(origin)) return callback(null, true);
+
+    console.warn("❌ Blocked by CORS:", origin);
     callback(new Error("Not allowed by CORS"));
   },
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -123,7 +132,7 @@ function applySecurity(app) {
     );
   }
 
-  // ✅ Add backend to connectSrc
+  // ✅ Content Security Policy (CSP)
   app.use(
     helmet.contentSecurityPolicy({
       directives: {
@@ -131,6 +140,8 @@ function applySecurity(app) {
         scriptSrc: [
           "'self'",
           "https://gracerouteltd.com",
+          "https://www.gracerouteltd.com",
+          "https://grace-route-frontend.vercel.app",
           "https://cdn.jsdelivr.net",
         ],
         styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
@@ -141,6 +152,9 @@ function applySecurity(app) {
           "http://localhost:5173",
           "http://localhost:3300",
           "https://gracerouteltd.com",
+          "https://www.gracerouteltd.com",
+          "https://grace-route-frontend.vercel.app",
+          "https://graceroute-backend.onrender.com", // backend Render URL
         ],
         objectSrc: ["'none'"],
         upgradeInsecureRequests: [],
