@@ -12,9 +12,10 @@
       ></mj-button>
     </mj-attributes>
 
+    <!-- ✅ Inline style for footer links (MJML-safe) -->
     <mj-style inline="inline">
-      .footer-link a {
-        color: #ffffff !important;
+      a.footer-link {
+        color: #9ca3af !important;
         text-decoration: underline;
       }
     </mj-style>
@@ -53,6 +54,7 @@
     <mj-section background-color="#ffffff" padding="30px 15px">
       <mj-column>
         <mj-text>Hello {{ name }},</mj-text>
+
         <mj-text>
           We’re thrilled to have you here! With decades of experience turning
           real estate dreams into reality, we’re more than just a real estate
@@ -72,6 +74,7 @@
           expert insights to help you make informed decisions in a fast-moving
           market.
         </mj-text>
+
         <mj-text>
           We’re excited to have you on board! Before getting started, please
           verify your email address by clicking the button below.
@@ -86,8 +89,9 @@
           your browser:
         </mj-text>
 
-        <mj-text color="#047857" font-size="14px" word-break="break-all">
-          {{ verifyURL }}
+        <!-- ✅ FIXED: Replaced illegal word-break attribute with inline style -->
+        <mj-text color="#047857" font-size="14px">
+          <span style="word-break: break-all">{{ verifyURL }}</span>
         </mj-text>
 
         <mj-text>
@@ -108,14 +112,16 @@
         <mj-text align="center" color="#ffffff" font-size="13px">
           © {{ year }} Grace Route Limited. All rights reserved.
         </mj-text>
-        <mj-text
-          align="center"
-          color="#9ca3af"
-          font-size="12px"
-          class="footer-link"
-        >
-          <a href="https://www.gracerouteltd.com">Visit Our Website</a> •
-          <a href="mailto:info@gracerouteltd.com">Contact Support</a>
+
+        <!-- ✅ FIXED: removed class attribute, used inline style for links -->
+        <mj-text align="center" color="#9ca3af" font-size="12px">
+          <a href="https://www.gracerouteltd.com" class="footer-link">
+            Visit Our Website
+          </a>
+          &nbsp;•&nbsp;
+          <a href="mailto:info@gracerouteltd.com" class="footer-link">
+            Contact Support
+          </a>
         </mj-text>
       </mj-column>
     </mj-section>
