@@ -33,8 +33,9 @@ const propertySchema = new mongoose.Schema(
     },
     bedrooms: {
       type: String,
-      match: /^[0-9]+\s*Bed(room)?s?$/i,
       required: true,
+      trim: true,
+      match: /^[0-9]+\s*(Bed(room)?s?)?$/i,
     },
     description: {
       type: String,

@@ -21,7 +21,27 @@ const updateProfile = async (req, res, next) => {
 
     res.status(200).json({
       message: "Profile updated successfully",
-      data: user,
+      data: {
+        email: user.email,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        phone_number: user.phone_number,
+        address: {
+          house_number: user.address?.house_number,
+          street: user.address?.street,
+          city: user.address?.city,
+          lga: user.address?.lga,
+          state: user.address?.state,
+          country: user.address?.country,
+          postalCode: user.address?.postalCode,
+        },
+        goals: {
+          buying_goals: user.goals?.buying_goals,
+          timeline: user.goals?.timeline,
+          selling_goals: user.goals?.selling_goals,
+          educational_goals: user.goals?.educational_goals,
+        },
+      },
     });
   } catch (err) {
     next(err);

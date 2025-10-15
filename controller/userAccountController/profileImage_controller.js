@@ -34,7 +34,7 @@ const uploadProfileImage = async (req, res, next) => {
 
     res.status(200).json({
       message: "uploaded profile image successfully",
-      data: newImage,
+      imageURL: newImage.imageUrl,
     });
   } catch (err) {
     next(err);
@@ -70,11 +70,47 @@ const replaceProfileImage = async (req, res, next) => {
 
     res.status(200).json({
       message: "Profile image replaced successfully",
-      data: existingImage,
+      imageURL: existingImage.imageUrl,
     });
   } catch (err) {
     next(err);
   }
 };
 
-module.exports = { uploadProfileImage, replaceProfileImage };
+const removeProfileImage = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+
+    // Step 1: Find and delete existing image record
+    const existingImage = await profileImage.findOneAndDelete({ userId });
+    if (!existingImage) {
+      return next(new AppError("No profile image found for this user", 404));
+    }
+
+    // Step 2: Delete from Cloudinary
+    const cloudinaryResult = await cloudinary.uploader.destroy(
+      existingImage.profileImageID
+    );
+
+    if (
+      cloudinaryResult.result !== "ok" &&
+      cloudinaryResult.result !== "not found"
+    ) {
+      return next(new AppError("Failed to delete image from Cloudinary", 500));
+    }
+
+    // Step 3: Respond success
+    res.status(200).json({
+      message: "Profile image deleted successfully",
+      deletedImage: existingImage,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = {
+  uploadProfileImage,
+  replaceProfileImage,
+  removeProfileImage,
+};

@@ -1,8 +1,9 @@
-require("dotenv").config();
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
+const dotenv = require("dotenv");
+dotenv.config();
 const AppError = require("./utils/AppError");
 const globalErrorHandler = require("./controller/errorController/errorController");
 const { applySecurity } = require("./middleware/security");

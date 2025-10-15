@@ -2,25 +2,22 @@ const mongoose = require("mongoose");
 
 const favouriteSchema = new mongoose.Schema(
   {
-    propertyId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "property_listing",
-      required: true,
-    },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "user",
       required: true,
+      unique: true, // one document per user
     },
+    propertyIds: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "property_listing",
+      },
+    ],
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
-// Ensure a user can’t favourite the same property twice
-favouriteSchema.index({ propertyId: 1, userId: 1 }, { unique: true });
-
-const favouriteModel = mongoose.model("myFavouriteProperties", favouriteSchema);
+const favouriteModel = mongoose.model("FavouriteProperty", favouriteSchema);
 
 module.exports = favouriteModel;

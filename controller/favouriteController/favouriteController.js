@@ -1,74 +1,116 @@
 const favouriteModel = require("../../model/favouriteModel/createFavourite_model");
 const AppError = require("../../utils/AppError");
 
-// Add property to favourites
-const addFavourite = async (req, res, next) => {
+/**
+ * ✅ Toggle Favourite (Add or Remove)
+ * If property exists in user's favourites → remove it
+ * If not → add it
+ */
+const toggleFavourite = async (req, res, next) => {
   try {
-    // if you’re using auth middleware, get user from req.user
-    const userId = req.user.id; // from token
-    const propertyId = req.params.id; // from URL params
+    const userId = req.user.id;
+    const { propertyId } = req.body;
 
-    const favourite = await favouriteModel.findOne({
-      propertyId,
-      userId,
-    });
-    if (favourite)
-      return next(new AppError("Property already in favourites", 400));
+    if (!propertyId) {
+      return next(new AppError("Property ID is required", 400));
+    }
 
+    let favourite = await favouriteModel.findOne({ userId });
+
+    if (favourite) {
+      let action = "";
+
+      if (favourite.propertyIds.includes(propertyId)) {
+        // Remove it
+        favourite.propertyIds = favourite.propertyIds.filter(
+          (id) => id.toString() !== propertyId
+        );
+        action = "removed";
+      } else {
+        // Add it
+        favourite.propertyIds.push(propertyId);
+        action = "added";
+      }
+
+      await favourite.save();
+
+      // repopulate updated favourites
+      const updatedFavourite = await favouriteModel
+        .findOne({ userId })
+        .populate({
+          path: "propertyIds",
+          populate: { path: "location", select: "city state" },
+        });
+
+      return res.status(200).json({
+        status: "success",
+        action,
+        message:
+          action === "added"
+            ? "Property added to favourites"
+            : "Property removed from favourites",
+        data: updatedFavourite.propertyIds, // ✅ send only the array
+      });
+    }
+
+    // if new
     const newFavourite = await favouriteModel.create({
-      propertyId,
       userId,
+      propertyIds: [propertyId],
     });
 
-    res.status(201).json({
+    const populatedNewFavourite = await favouriteModel
+      .findOne({ userId })
+      .populate({
+        path: "propertyIds",
+        populate: { path: "location", select: "city state" },
+      });
+
+    return res.status(201).json({
       status: "success",
+      action: "added",
       message: "Property added to favourites",
-      data: newFavourite,
+      data: populatedNewFavourite.propertyIds, // ✅ send only the array
     });
   } catch (err) {
     next(err);
   }
 };
 
-// Remove property from favourites
-const removeFavourite = async (req, res, next) => {
-  try {
-    const userId = req.user.id; // from token
-    const propertyId = req.params.id; // from URL params
-
-    const deleted = await favouriteModel.findOneAndDelete({
-      propertyId,
-      userId,
-    });
-
-    if (!deleted) return next(new AppError("Favourite not found", 404));
-
-    res.status(200).json({
-      status: "success",
-      message: "Property removed from favourites",
-    });
-  } catch (err) {
-    next(err);
-  }
-};
-
-// Get all favourites for user
+/**
+ * ✅ Get all favourites for the authenticated user
+ */
 const getFavourites = async (req, res, next) => {
   try {
-    const userId = req.user.id; // from auth middleware
+    const userId = req.user.id;
 
-    const favourites = await favouriteModel
-      .find({ userId }) // since your schema field is userId
-      .populate("propertyId"); // populate the propertyId reference
+    // Find the user's favourites document
+    const favourite = await favouriteModel.findOne({ userId }).populate({
+      path: "propertyIds", // ✅ match your schema field
+      populate: {
+        path: "location", // ✅ optional nested populate if your property has location ref
+        select: "city state",
+      },
+    });
+
+    if (!favourite || favourite.propertyIds.length === 0) {
+      return res.status(200).json({
+        status: "success",
+        message: "No favourite properties found",
+        results: 0,
+        data: [],
+      });
+    }
 
     res.status(200).json({
       status: "success",
-      results: favourites.length,
-      data: favourites,
+      message: "Fetched favourites successfully",
+      results: favourite.propertyIds.length,
+      data: favourite.propertyIds,
     });
   } catch (err) {
     next(err);
   }
 };
 
-module.exports = { addFavourite, removeFavourite, getFavourites };
+module.exports = { toggleFavourite, getFavourites };

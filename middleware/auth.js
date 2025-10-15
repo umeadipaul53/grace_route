@@ -3,6 +3,7 @@ const AppError = require("../utils/AppError");
 
 function authenticateToken(req, res, next) {
   const authHeader = req.headers["authorization"];
+  console.log("AUTH HEADER:", authHeader);
   const token = authHeader?.split(" ")[1];
 
   if (!token) {

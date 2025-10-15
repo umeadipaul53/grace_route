@@ -20,6 +20,7 @@ const updateProfile = require("../controller/userAccountController/updateProfile
 const {
   uploadProfileImage,
   replaceProfileImage,
+  removeProfileImage,
 } = require("../controller/userAccountController/profileImage_controller");
 const userProfile = require("../controller/userAccountController/profile_controller");
 const logout = require("../controller/userAccountController/logout");
@@ -30,8 +31,7 @@ const updateGoals = require("../controller/userAccountController/updateGoals_con
 const tourValidationMiddleware = require("../middleware/tour");
 const createTourRequest = require("../controller/tourController/createTour_controller");
 const {
-  addFavourite,
-  removeFavourite,
+  toggleFavourite,
   getFavourites,
 } = require("../controller/favouriteController/favouriteController");
 const viewAllUserListing = require("../controller/propertyController/viewUserListedProperty_controller");
@@ -83,6 +83,9 @@ user
     validateImageFile,
     replaceProfileImage
   );
+user
+  .route("/delete-profile-image")
+  .delete(authenticateToken, authorizeRoles("user"), removeProfileImage);
 user
   .route("/profile")
   .get(authenticateToken, authorizeRoles("user"), userProfile);
@@ -138,21 +141,14 @@ user
     validate(buyPropertyValidationSchema),
     buyProperty
   );
+
 user
-  .route("/add-to-favourite/:id")
+  .route("/toggle-favourite")
   .post(
     authenticateToken,
     authorizeRoles("user"),
     validate(favouriteValidation),
-    addFavourite
-  );
-user
-  .route("/remove-from-favourite/:id")
-  .delete(
-    authenticateToken,
-    authorizeRoles("user"),
-    validate(favouriteValidation),
-    removeFavourite
+    toggleFavourite
   );
 user
   .route("/get-favourites")

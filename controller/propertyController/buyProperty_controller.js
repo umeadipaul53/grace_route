@@ -47,7 +47,7 @@ const buyProperty = async (req, res, next) => {
     res.status(201).json({
       status: "success",
       message:
-        "Your property buy order has been created and you will be contacted",
+        "Thank you for making a purchasing order on this property, our sales team will contact you shortly.",
       data: newPurchase,
     });
   } catch (err) {

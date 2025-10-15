@@ -12,7 +12,6 @@ const objectId = (value, helpers) => {
 // Add favourite
 const favouriteValidation = Joi.object({
   propertyId: Joi.string().custom(objectId).required(),
-  userId: Joi.string().custom(objectId).required(),
 });
 
 module.exports = favouriteValidation;

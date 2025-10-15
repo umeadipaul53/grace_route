@@ -21,6 +21,7 @@ const createTourRequest = require("../controller/tourController/createTour_contr
 const viewAllPropertyListing = require("../controller/propertyController/viewAllPropertyListing_controller");
 const viewOnePropertyListing = require("../controller/propertyController/viewOneProperty_controller");
 const refreshToken = require("../controller/userAccountController/refreshUserToken_controller");
+const searchProperty = require("../controller/propertyController/searchProperty_controller");
 
 auth.route("/refresh-token").post(refreshToken);
 auth
@@ -59,5 +60,6 @@ auth
 auth.route("/login").post(validate(loginValidationSchema), userLogin);
 auth.route("/view-property-listing/:id").get(viewOnePropertyListing);
 auth.route("/view-all-property-listing").get(viewAllPropertyListing);
+auth.route("/fetch-property-locations").get(searchProperty);
 
 module.exports = auth;
