@@ -22,6 +22,9 @@ const viewAllPropertyListing = require("../controller/propertyController/viewAll
 const viewOnePropertyListing = require("../controller/propertyController/viewOneProperty_controller");
 const refreshToken = require("../controller/userAccountController/refreshUserToken_controller");
 const searchProperty = require("../controller/propertyController/searchProperty_controller");
+const comparableListing = require("../controller/propertyController/comparableListingController");
+const contactUs = require("../controller/emailController/contactUsController");
+const { contactEmailSchema } = require("../validators/emailMessageValidator");
 
 auth.route("/refresh-token").post(refreshToken);
 auth
@@ -60,6 +63,8 @@ auth
 auth.route("/login").post(validate(loginValidationSchema), userLogin);
 auth.route("/view-property-listing/:id").get(viewOnePropertyListing);
 auth.route("/view-all-property-listing").get(viewAllPropertyListing);
+auth.route("/comparable-listing/:id").get(comparableListing);
 auth.route("/fetch-property-locations").get(searchProperty);
+auth.route("/contact-us").post(validate(contactEmailSchema), contactUs);
 
 module.exports = auth;

@@ -8,7 +8,7 @@ const {
   propertyValidationSchema,
   propertyUpdateValidationSchema,
 } = require("../validators/propertyValidator");
-const emailMessageSchema = require("../validators/emailMessageValidator");
+const { emailMessageSchema } = require("../validators/emailMessageValidator");
 const authorizeRoles = require("../middleware/role");
 const authenticateToken = require("../middleware/auth");
 const logout = require("../controller/userAccountController/logout");

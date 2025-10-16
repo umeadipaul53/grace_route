@@ -5,7 +5,7 @@ const createPropertyModel = require("../../model/propertyModel/createProperty_mo
 
 const createTourRequest = async (req, res, next) => {
   try {
-    let { property, date, name, email, phone } = req.body;
+    let { property, date, time, name, email, phone } = req.body;
 
     if (req.user) {
       const user = await userModel.findById(req.user.id);
@@ -47,6 +47,7 @@ const createTourRequest = async (req, res, next) => {
       email,
       phone,
       date,
+      time,
     });
 
     res.status(201).json({

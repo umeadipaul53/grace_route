@@ -18,6 +18,7 @@ const sendSingleEmail = async (req, res, next) => {
       subject,
       templateName: "genericMessage", // 📨 you can reuse or create a general template
       variables: {
+        subject,
         name: "Valued User", // fallback if no real name
         message,
         year,
