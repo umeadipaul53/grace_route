@@ -14,7 +14,7 @@ const buyPropertySchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "settled"],
+      enum: ["pending", "settled", "rejected"],
       default: "pending", // fallback
     },
   },

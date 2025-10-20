@@ -16,7 +16,7 @@ const createProperty = require("../controller/propertyController/createProperty_
 const updateProperty = require("../controller/propertyController/updateProperty_controller");
 const sendSingleEmail = require("../controller/emailController/sendSingleEmail_controller");
 const updateBuyOrderStatus = require("../controller/propertyController/settleBuyOrder_controller");
-const viewBuyOrder = require("../controller/propertyController/viewBuyOrder_controller");
+const viewBuyOrders = require("../controller/propertyController/viewBuyOrders_controller");
 const settleTourRequest = require("../controller/tourController/settleTour_controller");
 const viewAllTourRequest = require("../controller/tourController/viewTourRequest_controller");
 const updatePropertyListingStatus = require("../controller/propertyController/updatePropertyListingStatus_controller");
@@ -50,7 +50,7 @@ admin_routes
   .get(authenticateToken, authorizeRoles("admin"), viewAllUsers);
 admin_routes
   .route("/view-buy-order")
-  .get(authenticateToken, authorizeRoles("admin"), viewBuyOrder); // buy orders that are pending or settled can be fetched
+  .get(authenticateToken, authorizeRoles("admin"), viewBuyOrders); // buy orders that are pending or settled can be fetched
 admin_routes
   .route("/settle-tour-request/:id")
   .patch(authenticateToken, authorizeRoles("admin"), settleTourRequest);

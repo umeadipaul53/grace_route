@@ -18,6 +18,7 @@ applySecurity(app);
 app.use(morgan(isProduction ? "combined" : "dev"));
 
 // Basic parsers
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

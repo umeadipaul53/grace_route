@@ -35,6 +35,7 @@ const {
   getFavourites,
 } = require("../controller/favouriteController/favouriteController");
 const viewAllUserListing = require("../controller/propertyController/viewUserListedProperty_controller");
+const viewUserBuyOrder = require("../controller/propertyController/viewUserBuyOrder_controller");
 
 //User Account activities
 user
@@ -153,6 +154,9 @@ user
 user
   .route("/get-favourites")
   .get(authenticateToken, authorizeRoles("user"), getFavourites);
+user
+  .route("/view-user-buy-orders")
+  .get(authenticateToken, authorizeRoles("user"), viewUserBuyOrder);
 user.route("/logout").post(logout);
 
 module.exports = user;

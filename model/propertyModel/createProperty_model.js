@@ -29,6 +29,7 @@ const propertySchema = new mongoose.Schema(
         "Block of Flats",
         "Mini Flat",
         "Self-contained",
+        "Others",
       ],
     },
     bedrooms: {
