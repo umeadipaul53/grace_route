@@ -10,4 +10,9 @@ const passwordValidationSchema = Joi.object({
   }),
 });
 
-module.exports = { passwordValidationSchema };
+const changeAdminPasswordSchema = Joi.object({
+  newPassword: passwordRule.required(),
+  oldPassword: passwordRule.required(),
+});
+
+module.exports = { passwordValidationSchema, changeAdminPasswordSchema };

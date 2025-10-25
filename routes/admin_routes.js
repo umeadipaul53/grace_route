@@ -26,6 +26,12 @@ const deleteUser = require("../controller/userAccountController/deleteUserAccoun
 const deletePropertyListing = require("../controller/propertyController/deleteProperty_controller");
 const viewAllPropertyListing = require("../controller/propertyController/viewAllPropertyListing_controller");
 const viewOnePropertyListing = require("../controller/propertyController/viewOneProperty_controller");
+const {
+  handleChangeAdminPassword,
+} = require("../controller/userController/changePassword_controller");
+const {
+  changeAdminPasswordSchema,
+} = require("../validators/passwordValidator");
 
 //Admin Account activities
 admin_routes
@@ -114,7 +120,14 @@ admin_routes
 admin_routes
   .route("/view-all-property-listing")
   .get(authenticateToken, authorizeRoles("admin"), viewAllPropertyListing);
-
+admin_routes
+  .route("/change-admin-password")
+  .patch(
+    authenticateToken,
+    authorizeRoles("admin"),
+    validate(changeAdminPasswordSchema),
+    handleChangeAdminPassword
+  );
 admin_routes.route("/logout").post(logout);
 
 module.exports = admin_routes;

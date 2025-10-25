@@ -56,7 +56,7 @@ const updateBuyOrderStatus = async (req, res, next) => {
     res.status(200).json({
       status: "success",
       message:
-        "Order settled successfully, property marked as sold, and other orders marked as soldout.",
+        "Order settled successfully, property marked as sold, and other orders marked as rejected.",
       data: updatedOrder,
     });
   } catch (error) {

@@ -57,19 +57,31 @@ const viewAllPropertyListing = async (req, res, next) => {
       .find(filter)
       .sort(sort)
       .skip(skip)
-      .limit(numericLimit);
+      .limit(numericLimit)
+      .populate("userId", "firstname lastname email phone_number");
 
     const totalDocuments = await createPropertyModel.countDocuments(filter);
     const totalPages = Math.ceil(totalDocuments / numericLimit);
 
     if (!properties || properties.length === 0) {
-      return next(
-        new AppError("No properties found matching your filters.", 404)
-      );
+      return res.status(200).json({
+        status: status || "all",
+        message: "No properties found matching your filters.",
+        pagination: {
+          currentPage: numericPage,
+          totalPages: 0,
+          limit: numericLimit,
+          totalResults: 0,
+          hasNextPage: false,
+          hasPrevPage: false,
+        },
+        count: 0,
+        data: [],
+      });
     }
 
     res.status(200).json({
-      status: "success",
+      status: status,
       message: "Property listings fetched successfully",
       pagination: {
         currentPage: numericPage,

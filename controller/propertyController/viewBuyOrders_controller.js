@@ -20,7 +20,7 @@ const viewBuyOrders = async (req, res, next) => {
         .limit(numericLimit)
         .populate(
           "property",
-          "property_name property_type price homeType plotArea location"
+          "property_name property_type price homeType plotArea location images status bedrooms"
         )
         .populate("buyer", "firstname lastname email phone_number"),
       buyPropertyModel.countDocuments(filter),
