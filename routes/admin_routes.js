@@ -32,7 +32,14 @@ const {
 const {
   changeAdminPasswordSchema,
 } = require("../validators/passwordValidator");
-
+const createEstate = require("../controller/estateController/createEstate");
+const createEstateValidation = require("../validators/estateValidator");
+const viewAllEstates = require("../controller/estateController/viewAllEstates");
+const createNews = require("../controller/newsController/newsController");
+const newsValidationSchema = require("../validators/newsValidator");
+const viewAllNews = require("../controller/newsController/viewAllNews");
+const deleteNews = require("../controller/newsController/deleteNews");
+const deleteEstate = require("../controller/estateController/deleteEstate");
 //Admin Account activities
 admin_routes
   .route("/send-email")
@@ -128,6 +135,41 @@ admin_routes
     validate(changeAdminPasswordSchema),
     handleChangeAdminPassword
   );
+admin_routes
+  .route("/create-estate")
+  .post(
+    authenticateToken,
+    authorizeRoles("admin"),
+    upload.array("estateImages"),
+    validateImageFile,
+    parseJsonFields,
+    validate(createEstateValidation),
+    createEstate
+  );
+admin_routes
+  .route("/view-estates")
+  .get(authenticateToken, authorizeRoles("admin"), viewAllEstates);
+admin_routes
+  .route("/delete-estate/:id")
+  .delete(authenticateToken, authorizeRoles("admin"), deleteEstate);
+admin_routes
+  .route("/create-news")
+  .post(
+    authenticateToken,
+    authorizeRoles("admin"),
+    upload.array("newsImages"),
+    validateImageFile,
+    parseJsonFields,
+    validate(newsValidationSchema),
+    createNews
+  );
+admin_routes
+  .route("/view-news")
+  .get(authenticateToken, authorizeRoles("admin"), viewAllNews);
+admin_routes
+  .route("/delete-news/:id")
+  .delete(authenticateToken, authorizeRoles("admin"), deleteNews);
+
 admin_routes.route("/logout").post(logout);
 
 module.exports = admin_routes;

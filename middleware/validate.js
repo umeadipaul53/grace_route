@@ -19,7 +19,13 @@ const validate = (schema = null, property = "body") => {
     });
 
     if (error) {
-      return next(new AppError("Validation failed", 400, error.details));
+      // Format Joi errors into cleaner messages
+      const formattedErrors = error.details.map((err) => ({
+        field: err.path.join("."),
+        message: err.message.replace(/["]/g, ""),
+      }));
+
+      return next(new AppError("Validation failed", 400, formattedErrors));
     }
 
     // ✅ replace raw input with validated/cleaned data

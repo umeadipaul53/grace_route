@@ -8,7 +8,7 @@ function globalErrorHandler(err, req, res, next) {
       status: err.status,
       message: err.message,
       // Only include details if present
-      ...(err.details ? { details: err.details } : {}),
+      ...(err.details ? { errors: err.details } : {}),
     });
   }
 
