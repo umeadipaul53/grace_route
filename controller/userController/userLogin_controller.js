@@ -58,6 +58,7 @@ const userLogin = async (req, res, next) => {
       httpOnly: true,
       secure: isProduction,
       sameSite: isProduction ? "None" : "Lax",
+      partitioned: isProduction ? true : false, // ⭐ REQUIRED ⭐
       path: "/", // more flexible for refresh endpoint
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
